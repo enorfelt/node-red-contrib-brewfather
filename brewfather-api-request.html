@@ -1,38 +1,154 @@
 <script type="text/javascript">
-  RED.nodes.registerType("pressure-to-water-column", {
+  RED.nodes.registerType("brewfather-api-request", {
     category: "brewfather",
     color: "#a6bbcf",
     defaults: {
       name: { value: "" },
+      endpoint: { value: "getbatches" },
+      include: { value: ["recipe.fermentation"] },
+      complete: { value: false },
+      status: { value: "Planning" },
+      offset: { value: 0 },
+      limit: { value: 10 },
     },
     credentials: {
-      userId: { type: "text" },
-      apiKey: { type: "password" },
+      userid: { type: "text" },
+      apikey: { type: "password" },
     },
     inputs: 1,
     outputs: 1,
-    icon: "file.png",
+    icon: "icon-192x192.png",
     label: function () {
       return this.name || "brewfather-api-request";
+    },
+    oneditprepare: function () {
+      $("#node-input-endpoint").on("change", function () {
+        var value = $("#node-input-endpoint").val();
+        $(".endpoint").hide();
+        $("." + value).show();
+      });
+      $("#node-input-offset").typedInput({
+        type: "num",
+        types: ["num"],
+        typeField: "#node-input-offset-type",
+      });
+      $("#node-input-limit").typedInput({
+        type: "str",
+        types: ["num"],
+        typeField: "#node-input-limit-type",
+      });
+      $("#node-input-include-list")
+        .css("min-height", "150px")
+        .editableList({
+          addButton: "field",
+          height: 300,
+          scrollOnAdd: false,
+          sortable: true,
+          removable: true,
+          addItem: function (container, i, opt) {
+            container.css({
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+            });
+            var row = $("<div/>").appendTo(container);
+            var inputField = $("<input/>", {
+              class: "node-input-rule-value",
+              type: "text",
+              style: "margin-left: 5px; width: 98%",
+            }).appendTo(row);
+            if (opt.hasOwnProperty("value")) {
+              inputField.val(opt.value);
+            }
+            inputField.typedInput({ default: "str", types: ["str"] });
+          },
+        });
+      for (var i = 0; i < this.include.length; i++) {
+        $("#node-input-include-list").editableList("addItem", { value: this.include[i] });
+      }
+    },
+    oneditsave: function () {
+      var includes = $("#node-input-include-list").editableList("items");
+      var node = this;
+      node.include = [];
+      includes.each(function (i) {
+        var includeData = $(this).data("data");
+        var include = $(this);
+        var value = include.find(".node-input-rule-value").typedInput("value");
+        node.include.push(value);
+      });
     },
   });
 </script>
 
-<script type="text/html" data-template-name="pressure-to-water-column">
+<script type="text/html" data-template-name="brewfather-api-request">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
   <div class="form-row">
-    <label for="node-input-user-id"><i class="fa fa-tag"></i> User ID</label>
-    <input type="text" id="node-input-user-id" />
+    <label for="node-input-userid"><i class="fa fa-user"></i> User ID</label>
+    <input type="text" id="node-input-userid" />
   </div>
   <div class="form-row">
-    <label for="node-input-api-key"><i class="fa fa-tag"></i> API-Key</label>
-    <input type="password" id="node-input-api-key" />
+    <label for="node-input-apikey"><i class="fa fa-lock"></i> API-Key</label>
+    <input type="password" id="node-input-apikey" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-endpoint"><i class="fa fa-wrench"></i> Endpoint</label>
+    <select type="text" id="node-input-endpoint" style="width:70%;">
+      <option value="getbatches">Get Batches</option>
+      <option value="getbatch">Get Batch</option>
+      <option value="updatebatches">Update Batch</option>
+      <option value="getrecipes">Get Recipes</option>
+      <option value="getrecipes">Get Recipe</option>
+      <option value="getfermentables">Get Fermentables</option>
+      <option value="getfermentable">Get Fermentable</option>
+      <option value="updatefermentable">Update Fermentable</option>
+      <option value="gethops">Get Hops</option>
+      <option value="gethop">Get Hop</option>
+      <option value="updatehop">Update Hop</option>
+      <option value="getmiscs">Get Miscs</option>
+      <option value="getmisc">Get Misc</option>
+      <option value="updatemisc">Update Misc</option>
+      <option value="getyeasts">Get Yeasts</option>
+      <option value="getyeast">Get Yeast</option>
+      <option value="updateyeast">Update Yeast</option>
+    </select>
+  </div>
+  <div class="form-row endpoint getbatches" style="display: none;">
+    <label for="node-input-status"><i class="fa fa-exclamation"></i> Status</label>
+    <select type="text" id="node-input-status" style="width:70%;">
+      <option value="Planning">Planning</option>
+      <option value="Brewing">Brewing</option>
+      <option value="Fermenting">Fermenting</option>
+      <option value="Conditioning">Conditioning</option>
+      <option value="Completed">Completed</option>
+      <option value="Archived">Archived</option>
+    </select>
+  </div>
+  <div class="form-row endpoint getbatches" style="display: none;">
+    <label for="node-input-complete"><i class="fa fa-check"></i> Complete</label>
+    <input type="checkbox" id="node-input-complete" style="display:top; width:20px; vertical-align:baseline;" />
+    inlcudes all the data in the result
+  </div>
+  <div class="form-row endpoint getbatches" style="margin-bottom:0;">
+    <label style="width: 100%;"><i class="fa fa-list"></i> Included fields</span></label>
+  </div>
+  <div class="form-row endpoint getbatches" style="display: none;">
+    <ol id="node-input-include-list"></ol>
+  </div>
+  <div class="form-row endpoint getbatches" style="display: none;">
+    <label>Offset</label>
+    <input type="text" id="node-input-offset" style="width:70%;" />
+    <input type="hidden" id="node-input-offset-typed" />
+  </div>
+  <div class="form-row endpoint getbatches" style="display: none;">
+    <label>Limit</label>
+    <input type="text" id="node-input-limit" style="width:70%;" />
+    <input type="hidden" id="node-input-limit-typed" />
   </div>
 </script>
 
-<script type="text/html" data-help-name="pressure-to-water-column">
+<script type="text/html" data-help-name="brewfather-api-request">
   <p>A node that makes request to the Brewfather API</p>
 </script>

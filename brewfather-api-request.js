@@ -7,10 +7,21 @@ module.exports = function (RED) {
     RED.nodes.createNode(this, config);
     var node = this;
 
-    const bfService = new BrewfatherService(this.credentials.userId, this.credentials.apiKey);
+    const bfService = new BrewfatherService(this.credentials.userid, this.credentials.apikey);
 
     node.on("input", async function (msg, send, done) {
-      msg.payload = await bfService.getBatches();
+      if (!node.credentials.userid || !node.credentials.apikey) {
+        node.warn("No userid or apikey provided");
+        if (done) done();
+        return;
+      }
+      msg.payload = await bfService.getBatches({
+        include: config.include.join(","),
+        complete: config.complete,
+        status: config.status,
+        offset: config.offset,
+        limit: config.limit,
+      });
       send(msg);
       if (done) done();
     });
@@ -18,8 +29,8 @@ module.exports = function (RED) {
 
   RED.nodes.registerType("brewfather-api-request", BrewfatherApiRequest, {
     credentials: {
-      userId: { type: "text" },
-      apiKey: { type: "password" },
-    }
+      userid: { type: "text" },
+      apikey: { type: "password" },
+    },
   });
 };

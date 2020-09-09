@@ -1,7 +1,7 @@
 "use strict";
 
-const HttpService = require('./http-service');
-const querystring = require('querystring');
+const httpService = require("./http-service");
+const querystring = require("querystring");
 
 class BrewfatherService {
   constructor(userName, apiKey) {
@@ -10,36 +10,36 @@ class BrewfatherService {
     const header = {
       Authorization: "Basic " + buff.toString("base64"),
     };
-    this.httpService = new HttpService('https://api.brewfather.app/v1', header);
+    httpService.headers = header;
+    this.baseUrl = "https://api.brewfather.app/v1";
   }
 
   async getBatches(params = {}) {
     var queryParams = {
-      include: params.include || '',
+      include: params.include || "",
       complete: params.complete || false,
-      status: params.status || 'Planning',
+      status: params.status || "Planning",
       offset: params.offset || 0,
-      limit: params.limit || 10
+      limit: params.limit || 10,
     };
 
-    var url = '/batches?' + querystring.stringify(queryParams);
+    var url = this.baseUrl + "/batches?" + querystring.stringify(queryParams);
 
-    return await this.httpService.get(url);
+    return await httpService.get(url);
   }
 
-  async getBatch(id, include = '') {
-    var url = '/batches/' + id;
-    if (url !== '') {
-      url += '&include=' + include;
+  async getBatch(id, include = "") {
+    var url = this.baseUrl + "/batches/" + id;
+    if (url !== "") {
+      url += "&include=" + include;
     }
-    return await this.get(url);
+    return await httpService.get(url);
   }
 
   async updateBatch(id, status) {
-    if (!id || !status)
-      return;
+    if (!id || !status) return;
 
-    return await this.httpService.patch('/batches/' + id + '&status=' + status);
+    return await httpService.patch(this.baseUrl + "/batches/" + id + "&status=" + status);
   }
 }
 

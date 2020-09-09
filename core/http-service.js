@@ -3,19 +3,27 @@
 const bent = require("bent");
 
 class HttpService {
+  constructor() {
+    this._headers = {};
+  }
 
-  constructor(baseUrl, headers = {}) {
-    this.bentGet = bent(baseUrl, "json", "GET", 200, headers);
-    this.bentPatch = bent(baseUrl, 'PATCH', 200, headers);
+  get headers() {
+    return this._headers;
+  }
+
+  set headers(value) {
+    this._headers = value;
   }
 
   get(url) {
-    return this.bentGet(url);
+    return bent("json", "GET", 200, this._headers)(url);
   }
 
   patch(url) {
-    return bent(this.baseUrl, 'PATCH', 200, this.headers);
+    return bent("PATCH", 200, this._headers)(url);
   }
-};
+}
 
-module.exports = HttpService;
+const httpService = new HttpService();
+
+module.exports = httpService;
