@@ -4,9 +4,14 @@
     color: "#a6bbcf",
     defaults: {
       name: { value: "" },
+      property: { value: "payload" },
+      propertyType: { value: "msg" },
       endpoint: { value: "getbatches" },
-      include: { value: ["recipe.fermentation"] },
+      include: { value: [] },
       complete: { value: false },
+      inventoryexist: { value: false },
+      inventoryadjust: { value: "" },
+      inventory: { value: "" },
       status: { value: "Planning" },
       offset: { value: 0 },
       limit: { value: 10 },
@@ -22,20 +27,36 @@
       return this.name || "brewfather-api-request";
     },
     oneditprepare: function () {
+      debugger;
       $("#node-input-endpoint").on("change", function () {
         var value = $("#node-input-endpoint").val();
         $(".endpoint").hide();
         $("." + value).show();
       });
-      $("#node-input-offset").typedInput({
-        type: "num",
+      $("#node-input-property").typedInput({
+        default: this.propertyType || "msg",
+        types: ["str", "msg", "flow", "global"],
+        typeField: "#node-input-property-typed",
+      });
+      $("#node-input-inventoryadjust").typedInput({
+        default: "num",
         types: ["num"],
-        typeField: "#node-input-offset-type",
+        typeField: "#node-input-inventoryadjust-typed",
+      });
+      $("#node-input-inventory").typedInput({
+        default: "num",
+        types: ["num"],
+        typeField: "#node-input-inventory-typed",
+      });
+      $("#node-input-offset").typedInput({
+        default: "num",
+        types: ["num"],
+        typeField: "#node-input-offset-typed",
       });
       $("#node-input-limit").typedInput({
-        type: "str",
+        default: "num",
         types: ["num"],
-        typeField: "#node-input-limit-type",
+        typeField: "#node-input-limit-typed",
       });
       $("#node-input-include-list")
         .css("min-height", "150px")
@@ -76,6 +97,8 @@
         var value = include.find(".node-input-rule-value").typedInput("value");
         node.include.push(value);
       });
+      debugger;
+      this.propertyType = $("#node-input-property").typedInput("type");
     },
   });
 </script>
@@ -94,13 +117,13 @@
     <input type="password" id="node-input-apikey" />
   </div>
   <div class="form-row">
-    <label for="node-input-endpoint"><i class="fa fa-wrench"></i> Endpoint</label>
+    <label for="node-input-endpoint"><i class="fa fa-wrench"></i> Action</label>
     <select type="text" id="node-input-endpoint" style="width:70%;">
       <option value="getbatches">Get Batches</option>
       <option value="getbatch">Get Batch</option>
-      <option value="updatebatches">Update Batch</option>
+      <option value="updatebatch">Update Batch</option>
       <option value="getrecipes">Get Recipes</option>
-      <option value="getrecipes">Get Recipe</option>
+      <option value="getrecipe">Get Recipe</option>
       <option value="getfermentables">Get Fermentables</option>
       <option value="getfermentable">Get Fermentable</option>
       <option value="updatefermentable">Update Fermentable</option>
@@ -115,7 +138,12 @@
       <option value="updateyeast">Update Yeast</option>
     </select>
   </div>
-  <div class="form-row endpoint getbatches" style="display: none;">
+  <div class="form-row endpoint getbatch updatebatch getrecipe getfermentable updatefermentable gethop updatehop getmisc updatemisc getyeast updateyeast">
+    <label><i class="fa fa-id-card"></i> Id</label>
+    <input type="text" id="node-input-property" style="width:70%;" />
+    <input type="hidden" id="node-input-property-typed" />
+  </div>
+  <div class="form-row endpoint getbatches updatebatch">
     <label for="node-input-status"><i class="fa fa-exclamation"></i> Status</label>
     <select type="text" id="node-input-status" style="width:70%;">
       <option value="Planning">Planning</option>
@@ -126,23 +154,40 @@
       <option value="Archived">Archived</option>
     </select>
   </div>
-  <div class="form-row endpoint getbatches" style="display: none;">
+  <div class="form-row endpoint getbatches getrecipes getfermentables gethops getmiscs getyeasts">
     <label for="node-input-complete"><i class="fa fa-check"></i> Complete</label>
     <input type="checkbox" id="node-input-complete" style="display:top; width:20px; vertical-align:baseline;" />
     inlcudes all the data in the result
   </div>
-  <div class="form-row endpoint getbatches" style="margin-bottom:0;">
-    <label style="width: 100%;"><i class="fa fa-list"></i> Included fields</span></label>
+  <div class="endpoint getbatches getbatch getrecipes getrecipe getfermentables getfermentable gethops gethop getmiscs getmisc getyeasts getyeast">
+    <div class="form-row" style="margin-bottom:0;">
+      <label style="width: 100%;"><i class="fa fa-list"></i> Included fields</span></label>
+    </div>
+    <div class="form-row">
+      <ol id="node-input-include-list"></ol>
+    </div>
   </div>
-  <div class="form-row endpoint getbatches" style="display: none;">
-    <ol id="node-input-include-list"></ol>
+  <div class="form-row endpoint getfermentables gethops getmiscs getyeasts">
+    <label for="node-input-inventoryexist"><i class="fa fa-check"></i> Existing</label>
+    <input type="checkbox" id="node-input-inventoryexist" style="display:top; width:20px; vertical-align:baseline;" />
+    only include items with inventory > 0
   </div>
-  <div class="form-row endpoint getbatches" style="display: none;">
+  <div class="form-row endpoint updatefermentable updatehop updatemisc updateyeast">
+    <label>Adjust</label>
+    <input type="text" id="node-input-inventoryadjust" style="width:70%;" />
+    <input type="hidden" id="node-input-inventoryadjust-typed" />
+  </div>
+  <div class="form-row endpoint updatefermentable updatehop updatemisc updateyeast">
+    <label>Amount</label>
+    <input type="text" id="node-input-inventory" style="width:70%;" />
+    <input type="hidden" id="node-input-inventory-typed" />
+  </div>
+  <div class="form-row endpoint getbatches getrecipes getfermentables gethops getmiscs getyeasts">
     <label>Offset</label>
     <input type="text" id="node-input-offset" style="width:70%;" />
     <input type="hidden" id="node-input-offset-typed" />
   </div>
-  <div class="form-row endpoint getbatches" style="display: none;">
+  <div class="form-row endpoint getbatches getrecipes getfermentables gethops getmiscs getyeasts">
     <label>Limit</label>
     <input type="text" id="node-input-limit" style="width:70%;" />
     <input type="hidden" id="node-input-limit-typed" />
