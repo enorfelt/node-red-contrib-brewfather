@@ -16,7 +16,7 @@ class BrewfatherService {
 
   async getBatches(params = {}) {
     var queryParams = {
-      include: params.include || "",
+      include: params.include ? params.include.join(",") : "",
       complete: params.complete || false,
       status: params.status || "Planning",
       offset: params.offset || 0,
@@ -28,10 +28,13 @@ class BrewfatherService {
     return await httpService.get(url);
   }
 
-  async getBatch(id, include = "") {
+  async getBatch(id, include = []) {
     var url = this.baseUrl + "/batches/" + id;
-    if (url !== "") {
-      url += "&include=" + include;
+    if (include.length > 0) {
+      var includeParam = {
+        include: include.join(",")
+      };
+      url +=  "&" + querystring.stringify(includeParam);
     }
     return await httpService.get(url);
   }

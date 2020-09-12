@@ -15,13 +15,33 @@ module.exports = function (RED) {
         if (done) done();
         return;
       }
-      msg.payload = await bfService.getBatches({
-        include: config.include.join(","),
-        complete: config.complete,
-        status: config.status,
-        offset: config.offset,
-        limit: config.limit,
-      });
+
+      if (config.endpoint === "getbatches") {
+        msg.payload = await bfService.getBatches({
+          include: config.include,
+          complete: config.complete,
+          status: config.status,
+          offset: config.offset,
+          limit: config.limit,
+        });
+      }
+      if (config.endpoint === "getbatch") {
+        var id = "";
+        if (config.propertyType === "str") {
+          id = config.property;
+        } else if (config.propertyType === "msg") {
+          id = msg[config.property];
+        } else {
+          RED.util.evaluateNodeProperty(config.property,config.propertyType,node,msg,(err,value) => {
+            if (err) {
+                if (done) done(err);
+            } else {
+                id = value;
+            }
+        });
+        }
+        msg.payload = await bfService.getBatch(id, config.include);
+      }
       send(msg);
       if (done) done();
     });
