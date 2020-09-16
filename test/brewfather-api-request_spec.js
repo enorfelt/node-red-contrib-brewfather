@@ -180,6 +180,7 @@ describe("brewfather-api-request Node", function () {
     var flow = [
       {
         id: "n1",
+        z: "flow",
         type: "brewfather-api-request",
         name: "brewfather-api-request",
         wires: [["n2"]],
@@ -210,8 +211,51 @@ describe("brewfather-api-request Node", function () {
           done();
         });
         var context = n1.context();
-        var flow = context.flow;
-        flow.set("foo", "idfromfoo", "memory1", function() {
+        var f = context.flow;
+        f.set("foo", "idfromfoo", "memory1", function() {
+          n1.receive({ payload: "" });
+        });
+      });
+    });
+  });
+
+  it("should get batch with id from global", function (done) {
+    getStub.resolves({ id: "idfromfoo" });
+    var flow = [
+      {
+        id: "n1",
+        type: "brewfather-api-request",
+        name: "brewfather-api-request",
+        wires: [["n2"]],
+        endpoint: "getbatch",
+        include: ["recipe.mash", "recipe.steps"],
+        property: "#:(memory1)::foo",
+        propertyType: "global"
+      },
+      { id: "n2", type: "helper" },
+    ];
+    var credentials = {
+      n1: {
+        userid: "username",
+        apikey: "password",
+      },
+    };
+    helper.load(bfApiReq, flow, credentials, function () {
+      initContext(function () {
+        var n2 = helper.getNode("n2");
+        var n1 = helper.getNode("n1");
+        n2.on("input", function (msg) {
+          msg.should.have.property("payload", { id: "idfromfoo" });
+          assert(
+            getStub.calledWith(
+              "https://api.brewfather.app/v1/batches/idfromfoo&include=recipe.mash%2Crecipe.steps"
+            )
+          );  
+          done();
+        });
+        var context = n1.context();
+        var global = context.global;
+        global.set("foo", "idfromfoo", "memory1", function() {
           n1.receive({ payload: "" });
         });
       });
