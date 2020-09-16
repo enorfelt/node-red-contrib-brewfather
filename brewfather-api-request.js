@@ -38,7 +38,7 @@ module.exports = function (RED) {
             } else {
                 id = value;
             }
-        });
+          });
         }
         msg.payload = await bfService.getBatch(id, config.include);
       }
