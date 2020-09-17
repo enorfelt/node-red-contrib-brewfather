@@ -11,8 +11,10 @@ helper.init(require.resolve("node-red"));
 
 describe("brewfather-api-request Node", function () {
   var getStub;
+  var updateStub;
   beforeEach(function (done) {
     getStub = sinon.stub(httpService, "get");
+    updateStub = sinon.stub(httpService, "patch");
     helper.startServer(done);
   });
 
@@ -43,6 +45,7 @@ describe("brewfather-api-request Node", function () {
     }).then(function () {
       helper.stopServer(done);
       getStub.restore();
+      updateStub.restore();
     });
   });
 
@@ -99,7 +102,7 @@ describe("brewfather-api-request Node", function () {
     });
   });
 
-  describe("get batches", function () {
+  describe("batches", function () {
     it("should get batches", function (done) {
       getStub.resolves([{}, {}, {}]);
       var flow = [
@@ -139,10 +142,6 @@ describe("brewfather-api-request Node", function () {
         n1.receive({ payload: {} });
       });
     });
-  });
-
-  describe("get batch", function () {
-
 
 
     it("should get batch with id in payload", function (done) {
@@ -173,7 +172,7 @@ describe("brewfather-api-request Node", function () {
           msg.should.have.property("payload", { id: "1234abc" });
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/batches/1234abc&include=recipe.mash%2Crecipe.steps"
+              "https://api.brewfather.app/v1/batches/1234abc?include=recipe.mash%2Crecipe.steps"
             )
           );
           done();
@@ -210,7 +209,7 @@ describe("brewfather-api-request Node", function () {
           msg.should.have.property("payload", { id: "abc1234" });
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/batches/abc1234&include=recipe.mash%2Crecipe.steps"
+              "https://api.brewfather.app/v1/batches/abc1234?include=recipe.mash%2Crecipe.steps"
             )
           );
           done();
@@ -249,7 +248,7 @@ describe("brewfather-api-request Node", function () {
             msg.should.have.property("payload", { id: "idfromfoo" });
             assert(
               getStub.calledWith(
-                "https://api.brewfather.app/v1/batches/idfromfoo&include=recipe.mash%2Crecipe.steps"
+                "https://api.brewfather.app/v1/batches/idfromfoo?include=recipe.mash%2Crecipe.steps"
               )
             );
             done();
@@ -292,7 +291,7 @@ describe("brewfather-api-request Node", function () {
             msg.should.have.property("payload", { id: "idfromfoo" });
             assert(
               getStub.calledWith(
-                "https://api.brewfather.app/v1/batches/idfromfoo&include=recipe.mash%2Crecipe.steps"
+                "https://api.brewfather.app/v1/batches/idfromfoo?include=recipe.mash%2Crecipe.steps"
               )
             );
             done();
@@ -305,5 +304,122 @@ describe("brewfather-api-request Node", function () {
         });
       });
     });
-  });
+
+    it("should update batch", function (done) {
+      updateStub.resolves();
+      var flow = [
+        {
+          id: "n1",
+          type: "brewfather-api-request",
+          name: "brewfather-api-request",
+          wires: [["n2"]],
+          endpoint: "updatebatch",
+          status: "Brewing",
+          property: "payload",
+          propertyType: "msg"
+        },
+        { id: "n2", type: "helper" },
+      ];
+      var credentials = {
+        n1: {
+          userid: "username",
+          apikey: "password",
+        },
+      };
+      helper.load(bfApiReq, flow, credentials, function () {
+        initContext(function () {
+          var n2 = helper.getNode("n2");
+          var n1 = helper.getNode("n1");
+          n2.on("input", function (msg) {
+            assert(
+              updateStub.calledWith(
+                "https://api.brewfather.app/v1/batches/idfromfoo?status=Brewing"
+              )
+            );
+            done();
+          });
+          n1.receive({ payload: "idfromfoo" });
+        });
+      });
+    });
+  }); // batches
+
+  describe("recipes", function () {
+    it("should get recipes", function (done) {
+      getStub.resolves([{}, {}, {}]);
+      var flow = [
+        {
+          id: "n1",
+          type: "brewfather-api-request",
+          name: "brewfather-api-request",
+          wires: [["n2"]],
+          endpoint: "getrecipes",
+          include: ["recipe.mash", "recipe.steps"],
+          complete: true,
+          offset: 1,
+          limit: 20
+        },
+        { id: "n2", type: "helper" },
+      ];
+      var credentials = {
+        n1: {
+          userid: "username",
+          apikey: "password",
+        },
+      };
+      helper.load(bfApiReq, flow, credentials, function () {
+        var n2 = helper.getNode("n2");
+        var n1 = helper.getNode("n1");
+        n2.on("input", function (msg) {
+          msg.should.have.property("payload");
+          msg.payload.should.have.size(3);
+          assert(
+            getStub.calledWith(
+              "https://api.brewfather.app/v1/recipes?include=recipe.mash%2Crecipe.steps&complete=true&offset=1&limit=20"
+            )
+          );
+          done();
+        });
+        n1.receive({ payload: {} });
+      });
+    });
+
+    it("should get recipe", function (done) {
+      getStub.resolves([{}, {}, {}]);
+      var flow = [
+        {
+          id: "n1",
+          type: "brewfather-api-request",
+          name: "brewfather-api-request",
+          wires: [["n2"]],
+          endpoint: "getrecipe",
+          include: ["recipe.mash", "recipe.steps"],
+          property: "payload",
+          propertyType: "msg"
+        },
+        { id: "n2", type: "helper" },
+      ];
+      var credentials = {
+        n1: {
+          userid: "username",
+          apikey: "password",
+        },
+      };
+      helper.load(bfApiReq, flow, credentials, function () {
+        var n2 = helper.getNode("n2");
+        var n1 = helper.getNode("n1");
+        n2.on("input", function (msg) {
+          msg.should.have.property("payload");
+          msg.payload.should.have.size(3);
+          assert(
+            getStub.calledWith(
+              "https://api.brewfather.app/v1/recipes/recipeid?include=recipe.mash%2Crecipe.steps"
+            )
+          );
+          done();
+        });
+        n1.receive({ payload: "recipeid" });
+      });
+    });
+  }); // get recipes
 });

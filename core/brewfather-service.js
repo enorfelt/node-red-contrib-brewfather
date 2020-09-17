@@ -4,14 +4,17 @@ const httpService = require("./http-service");
 const querystring = require("querystring");
 
 class BrewfatherService {
-  constructor(userName, apiKey) {
+  constructor() {
+    this.baseUrl = "https://api.brewfather.app/v1";
+  }
+
+  setCredentials(userName, apiKey) {
     const data = userName + ":" + apiKey;
     const buff = Buffer.from(data);
     const header = {
       Authorization: "Basic " + buff.toString("base64"),
     };
     httpService.headers = header;
-    this.baseUrl = "https://api.brewfather.app/v1";
   }
 
   async getBatches(params = {}) {
@@ -34,7 +37,7 @@ class BrewfatherService {
       var includeParam = {
         include: include.join(",")
       };
-      url +=  "&" + querystring.stringify(includeParam);
+      url +=  "?" + querystring.stringify(includeParam);
     }
     return await httpService.get(url);
   }
@@ -42,8 +45,32 @@ class BrewfatherService {
   async updateBatch(id, status) {
     if (!id || !status) return;
 
-    return await httpService.patch(this.baseUrl + "/batches/" + id + "&status=" + status);
+    return await httpService.patch(this.baseUrl + "/batches/" + id + "?status=" + status);
+  }
+
+  async getRecipes(params = {}) {
+    var queryParams = {
+      include: params.include ? params.include.join(",") : "",
+      complete: params.complete || false,
+      offset: params.offset || 0,
+      limit: params.limit || 10
+    }
+
+    var url = this.baseUrl + "/recipes?" + querystring.stringify(queryParams);
+
+    return await httpService.get(url);
+  }
+
+  async getRecipe(id, include = []) {
+    var url = this.baseUrl + "/recipes/" + id;
+    if (include.length > 0) {
+      var includeParam = {
+        include: include.join(",")
+      };
+      url +=  "?" + querystring.stringify(includeParam);
+    }
+    return await httpService.get(url);
   }
 }
-
-module.exports = BrewfatherService;
+const bfService = new BrewfatherService();
+module.exports = bfService;
