@@ -71,6 +71,39 @@ class BrewfatherService {
     }
     return await httpService.get(url);
   }
+
+  async getInventories(params = {})
+  {
+    var queryParams = {
+      include: params.include ? params.include.join(",") : "",
+      complete: params.complete || false,
+      inventory_exists: params.inventoryexist || false,
+      offset: params.offset || 0,
+      limit: params.limit || 10
+    }
+
+    var inventoryType = params.inventoryType || "fermentables";
+    var url = this.baseUrl + "/inventory/" + inventoryType + "?" + querystring.stringify(queryParams);
+
+    return await httpService.get(url);
+  }
+
+  async getInventory(id, inventoryType, include = []) {
+    var url = this.baseUrl + "/inventory/" + inventoryType + "/" + id;
+    if (include.length > 0) {
+      var includeParam = {
+        include: include.join(",")
+      };
+      url += "?" + querystring.stringify(includeParam);
+    }
+    return await httpService.get(url);
+  }
+
+  async updateInventory(id, inventoryType, inventory, inventoryAdjust) {
+    var url = this.baseUrl + "/inventory/" + inventoryType + "/" + id;
+    url += inventory !== "" ? "?inventory=" + inventory : "?inventory_adjust=" + inventoryAdjust;
+    return await httpService.patch(url);
+  }
 }
 const bfService = new BrewfatherService();
 module.exports = bfService;
