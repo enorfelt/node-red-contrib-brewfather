@@ -1,6 +1,8 @@
 # node-red-contrib-brewfather
 A set of node-red nodes to simplify integration with the Brewfather API
 
+![node-red-contrib-brewfather CI](https://github.com/enorfelt/node-red-contrib-brewfather/workflows/node-red-contrib-brewfather%20CI/badge.svg?branch=master)
+
 # Getting started
 
 ## Install
@@ -10,8 +12,6 @@ To install the current live version, please use Node-RED's Palette Manager or is
     $ npm install node-red-contrib-brewfather
 
 ## brewfahter-api-request node
-
-![node-red-contrib-brewfather CI](https://github.com/enorfelt/node-red-contrib-brewfather/workflows/node-red-contrib-brewfather%20CI/badge.svg?branch=master)
 
 ### Simple flow
 
