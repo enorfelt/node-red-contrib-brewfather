@@ -7,8 +7,8 @@ A set of node-red nodes to simplify integration with the Brewfather API
 
 ## Install
 
-To install the current live version, please use Node-RED's Palette Manager or issue following commands:
-    $ cd ~/.node-red
+To install the current live version, please use Node-RED's Palette Manager or issue following commands:  
+    $ cd ~/.node-red  
     $ npm install node-red-contrib-brewfather
 
 ## brewfahter-api-request node
@@ -19,7 +19,7 @@ Once installed, add a simple flow consisting of a trigger, a brewfather and a de
 Make sure that the trigger node injects on startup to trigger the Brewfahter node.  
 Double click the brewfahter node to open it's settings.
 1. Give the node a meaningful name like Get Batches
-2. Enter User ID and API-Key obtained from the Brewfather app. [(Click here to read how to)](https://docs.brewfather.app/api#generate-api-key)
+2. Enter User ID and API-Key obtained from the Brewfather app. ([Click here to read how to](https://docs.brewfather.app/api#generate-api-key))
 3. Select the action you would like to do. Select Get Batches
 4. Select the batch status must have to be returned, e.g. Planning (Make sure you have some batches in Planning status)
 5. Check the Complete checkbox to return all available data for the batch
