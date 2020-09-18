@@ -11,6 +11,8 @@ To install the current live version, please use Node-RED's Palette Manager or is
 
 ## brewfahter-api-request node
 
+![node-red-contrib-brewfather CI](https://github.com/enorfelt/node-red-contrib-brewfather/workflows/node-red-contrib-brewfather%20CI/badge.svg?branch=master)
+
 ### Simple flow
 
 Once installed, add a simple flow consisting of a trigger, a brewfather and a debug node all connected in order.  
