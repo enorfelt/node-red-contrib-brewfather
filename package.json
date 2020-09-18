@@ -1,8 +1,7 @@
 {
-  "name": "red-contrib-brewfather",
+  "name": "node-red-contrib-brewfather",
   "version": "1.0.0",
   "description": "A set of node-red nodes to simplify integration with the Brewfather API",
-  "main": "index.js",
   "scripts": {
     "test": "mocha \"test/**/*_spec.js\""
   },
