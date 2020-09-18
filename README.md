@@ -8,8 +8,10 @@ A set of node-red nodes to simplify integration with the Brewfather API
 ## Install
 
 To install the current live version, please use Node-RED's Palette Manager or issue following commands:  
-    $ cd ~/.node-red  
-    $ npm install node-red-contrib-brewfather
+```
+$ cd ~/.node-red  
+$ npm install node-red-contrib-brewfather
+```
 
 ## brewfahter-api-request node
 
