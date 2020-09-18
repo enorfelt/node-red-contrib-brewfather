@@ -29,7 +29,7 @@ Double click the brewfahter node to open it's settings.
 
 | Setting           | Description                                                                  |
 | ----------------- | -----------------------------------------------------------------------------|
-| `name`            | What ever you name the node                                                  |
+| `Name`            | What ever you name the node                                                  |
 | `User ID`         | The user id obtained from the Brewfather app                                 |
 | `API-Key`         | The password for using the Brewfahter API obtained from Brewfahter app       |
 | `Action`          | Select what data you would like to get or modify                             |
@@ -43,4 +43,12 @@ Double click the brewfahter node to open it's settings.
 | `Adjust`          | Related to inventory update operations. Adjust the inventory by +/- amount   |
 | `Amount`          | Related to inventory update operations. Sets the inventory to entered amount |
 
+# Contributing
 
+1. Fork this repo
+2. Write a red unit test for your change
+3. Implement the code and make the test green
+4. Refactor your code to make it nice
+5. Make a pull request
+
+I will probably approve it ;)
