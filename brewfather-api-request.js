@@ -1,15 +1,10 @@
-"use strict";
-
-const bfService = require("./core/brewfather-service");
-
 module.exports = function (RED) {
-
+  "use strict";
+  const bfService = require("./core/brewfather-service");
 
   function BrewfatherApiRequest(config) {
     RED.nodes.createNode(this, config);
     var node = this;
-
-    bfService.setCredentials(this.credentials.userid, this.credentials.apikey)
 
     node.on("input", async function (msg, send, done) {
       if (!node.credentials.userid || !node.credentials.apikey) {
@@ -18,7 +13,8 @@ module.exports = function (RED) {
         return;
       }
       try {
-        msg.payload = await _requestFactory(node, msg, config)
+        bfService.setCredentials(node.credentials.userid, node.credentials.apikey);
+        msg.payload = await _requestFactory(node, msg, config);
         send(msg);
         if (done) done();
       } catch (error) {
