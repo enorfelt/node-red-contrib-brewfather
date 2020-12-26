@@ -1,3 +1,4 @@
+
 <script type="text/javascript">
   RED.nodes.registerType("brewfather-api-request", {
     category: "brewfather",
@@ -9,16 +10,14 @@
       endpoint: { value: "getbatches", required: true },
       include: { value: [] },
       complete: { value: false },
+      inventorynegative: { value: false },
       inventoryexist: { value: false },
       inventoryadjust: { value: "" },
       inventory: { value: "" },
       status: { value: "Planning" },
       offset: { value: 0 },
       limit: { value: 10 },
-    },
-    credentials: {
-      userid: { type: "text" },
-      apikey: { type: "password" },
+      brewfatherCredentials: { value: "", type: "brewfather-credentials" },
     },
     inputs: 1,
     outputs: 1,
@@ -80,18 +79,22 @@
               inputField.val(opt.value);
             }
             inputField.typedInput({ default: "str", types: ["str"] });
-            inputField.parent().find('.red-ui-typedInput-input').focus(function () {
-              var autocompleteSoure = getAutocompleteSource();
-              $(this).autocomplete(
-                {
+            inputField
+              .parent()
+              .find(".red-ui-typedInput-input")
+              .focus(function () {
+                var autocompleteSoure = getAutocompleteSource();
+                $(this).autocomplete({
                   source: autocompleteSoure,
-                  minLength: 0
+                  minLength: 0,
                 });
-            })
+              });
           },
         });
       for (var i = 0; i < this.include.length; i++) {
-        $("#node-input-include-list").editableList("addItem", { value: this.include[i] });
+        $("#node-input-include-list").editableList("addItem", {
+          value: this.include[i],
+        });
       }
     },
     oneditsave: function () {
@@ -111,23 +114,59 @@
   function getAutocompleteSource() {
     var endpoint = $("#node-input-endpoint").val();
     switch (endpoint) {
-      case "getbatches": case "getbatch":
+      case "getbatches":
+      case "getbatch":
         return batchSchema;
-      case "getrecipes": case "getrecipe":
+      case "getrecipes":
+      case "getrecipe":
         return recipeSchema;
-      case "getfermentables": case "getfermentable":
+      case "getfermentables":
+      case "getfermentable":
         return fermentableSchmea;
-      case "gethops": case "gethop":
+      case "gethops":
+      case "gethop":
         return hopSchema;
-      case "getmiscs": case "getmisc":
+      case "getmiscs":
+      case "getmisc":
         return miscSchema;
-      case "getyeasts": case "getyeast":
+      case "getyeasts":
+      case "getyeast":
         return yeastSchema;
       default:
         return [];
     }
   }
+</script>
 
+<script type="text/javascript">
+  RED.nodes.registerType("brewfather-credentials", {
+    category: "config",
+    defaults: {
+      name: { value: "Credentials 1" },
+    },
+    credentials: {
+      userid: { type: "text" },
+      apikey: { type: "password" },
+    },
+    label: function () {
+      return this.name;
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="brewfather-credentials">
+  <div class="form-row">
+      <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-config-input-name" placeholder="Name" />
+    </div>
+    <div class="form-row">
+      <label for="node-config-input-userid"><i class="fa fa-user"></i> User ID</label>
+      <input type="text" id="node-config-input-userid" />
+    </div>
+    <div class="form-row">
+      <label for="node-config-input-apikey"><i class="fa fa-lock"></i> API-Key</label>
+      <input type="password" id="node-config-input-apikey" />
+    </div>
 </script>
 
 <script type="text/html" data-template-name="brewfather-api-request">
@@ -143,18 +182,17 @@
     <input type="text" id="node-input-name" placeholder="Name" />
   </div>
   <div class="form-row">
-    <label for="node-input-userid"><i class="fa fa-user"></i> User ID</label>
-    <input type="text" id="node-input-userid" />
-  </div>
-  <div class="form-row">
-    <label for="node-input-apikey"><i class="fa fa-lock"></i> API-Key</label>
-    <input type="password" id="node-input-apikey" />
+    <label for="node-input-brewfatherCredentials"><i class="fa fa-lock"></i> Credentials</label>
+    <input type="text" id="node-input-brewfatherCredentials" />
   </div>
   <div class="form-row">
     <label for="node-input-endpoint"><i class="fa fa-wrench"></i> Action</label>
     <select type="text" id="node-input-endpoint" style="width:70%;">
       <option value="getbatches">Get Batches</option>
       <option value="getbatch">Get Batch</option>
+      <option value="getbatchreadings">Get Batch All Readings</option>
+      <option value="getbatchlastreading">Get Batch Last Reading</option>
+      <option value="getbatchbrewtracker">Get Batch Brewtracker</option>
       <option value="updatebatch">Update Batch</option>
       <option value="getrecipes">Get Recipes</option>
       <option value="getrecipe">Get Recipe</option>
@@ -172,7 +210,7 @@
       <option value="updateyeast">Update Yeast</option>
     </select>
   </div>
-  <div class="form-row endpoint getbatch updatebatch getrecipe getfermentable updatefermentable gethop updatehop getmisc updatemisc getyeast updateyeast">
+  <div class="form-row endpoint getbatchreadings getbatchlastreading getbatchbrewtracker getbatch updatebatch getrecipe getfermentable updatefermentable gethop updatehop getmisc updatemisc getyeast updateyeast">
     <label><i class="fa fa-id-card"></i> Id</label>
     <input type="text" id="node-input-property" style="width:70%;" />
     <input type="hidden" id="node-input-property-typed" />
@@ -200,6 +238,11 @@
     <div class="form-row">
       <ol id="node-input-include-list"></ol>
     </div>
+  </div>
+  <div class="form-row endpoint getfermentables gethops getmiscs getyeasts">
+    <label for="node-input-inventorynegative"><i class="fa fa-check"></i> Negative</label>
+    <input type="checkbox" id="node-input-inventorynegative" style="display:top; width:20px; vertical-align:baseline;" />
+    only include items with inventory < 0
   </div>
   <div class="form-row endpoint getfermentables gethops getmiscs getyeasts">
     <label for="node-input-inventoryexist"><i class="fa fa-check"></i> Existing</label>
@@ -232,17 +275,25 @@
   <p>A node that makes request to the Brewfather API</p>
   <h3>Inputs</h3>
   <dl class="message-properties">
-    <dt>payload
+    <dt>
+      payload
       <span class="property-type">str</span>
     </dt>
-    <dd class="optional">Triggers the brewfhater api request. Input can contain id to selected resource</dd>
+    <dd class="optional">
+      Triggers the brewfhater api request. Input can contain id to selected
+      resource
+    </dd>
   </dl>
   <h3>Outputs</h3>
   <dl class="message-properties">
-    <dt>payload
+    <dt>
+      payload
       <span class="property-type">object | array</span>
     </dt>
-    <dd class="optional">The result from the Brewfather API. Either a singel json object or an array of json objects</dd>
+    <dd class="optional">
+      The result from the Brewfather API. Either a singel json object or an
+      array of json objects
+    </dd>
   </dl>
 </script>
 
@@ -1610,7 +1661,7 @@
     "yeasts.starter",
     "yeasts.starterSize",
     "yeasts.type",
-    "yeasts.unit"
+    "yeasts.unit",
   ];
 </script>
 
@@ -1639,7 +1690,7 @@
     "potential",
     "potentialPercentage",
     "supplier",
-    "type"
+    "type",
   ];
 </script>
 
@@ -1664,7 +1715,7 @@
     "time",
     "type",
     "use",
-    "year"
+    "year",
   ];
 </script>
 
@@ -1691,7 +1742,7 @@
     "type",
     "unit",
     "use",
-    "userNotes"
+    "userNotes",
   ];
 </script>
 
@@ -1722,6 +1773,6 @@
     "starter",
     "starterSize",
     "type",
-    "unit"
+    "unit",
   ];
 </script>

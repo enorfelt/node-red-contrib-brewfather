@@ -42,6 +42,24 @@ class BrewfatherService {
     return await httpService.get(url);
   }
 
+  async getBatchReadings(id) {
+    var url = this.baseUrl + "/batches/" + id + "/readings";
+    
+    return await httpService.get(url);
+  }
+
+  async getBatchLastReading(id) {
+    var url = this.baseUrl + "/batches/" + id + "/readings/last";
+    
+    return await httpService.get(url);
+  }
+
+  async getBatchBrewtracker(id) {
+    var url = this.baseUrl + "/batches/" + id + "/brewtracker";
+    
+    return await httpService.get(url);
+  }
+
   async updateBatch(id, status) {
     if (!id || !status) return;
 
@@ -75,6 +93,7 @@ class BrewfatherService {
   async getInventories(params = {})
   {
     var queryParams = {
+      inventory_negative: params.inventorynegative || false,
       include: params.include ? params.include.join(",") : "",
       complete: params.complete || false,
       inventory_exists: params.inventoryexist || false,
