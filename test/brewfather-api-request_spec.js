@@ -6,6 +6,7 @@ var RED = require("node-red/lib/red");
 const sinon = require("sinon");
 const httpService = require("../core/http-service");
 const bfApiReq = require("../brewfather-api-request.js");
+const bfConfig = require("../brewfather-config.js");
 
 helper.init(require.resolve("node-red"));
 
@@ -67,7 +68,8 @@ describe("brewfather-api-request Node", function () {
         apikey: "password",
       },
     };
-    helper.load(bfApiReq, flow, credentials, function () {
+   
+    helper.load([bfConfig, bfApiReq], flow, credentials, function () {
       var n1 = helper.getNode("n1");
       n1.should.have.property("name", "brewfather-api-request");
       done();
@@ -84,10 +86,10 @@ describe("brewfather-api-request Node", function () {
         type: "brewfather-api-request",
         name: "brewfather-api-request",
         wires: [["n2"]],
-        brewfatherCredentials: "n3",
+        brewfatherConfig: "n3",
       },
       { id: "n2", type: "helper" },
-      { id: "n3", type: "brewfather-credentials" },
+      { id: "n3", type: "brewfather-config" },
     ];
 
     var credentials = {
@@ -97,7 +99,7 @@ describe("brewfather-api-request Node", function () {
       },
     };
 
-    helper.load(bfApiReq, flow, credentials, function () {
+    helper.load([bfConfig, bfApiReq], flow, credentials, function () {
       var n2 = helper.getNode("n2");
       var n1 = helper.getNode("n1");
       n2.on("input", function (msg) {
@@ -122,10 +124,10 @@ describe("brewfather-api-request Node", function () {
         name: "brewfather-api-request",
         endpoint: "unknownendpoint",
         wires: [["n2"]],
-        brewfatherCredentials: "n3",
+        brewfatherConfig: "n3",
       },
       { id: "n2", type: "helper" },
-      { id: "n3", type: "brewfather-credentials" },
+      { id: "n3", type: "brewfather-config" },
     ];
 
     var credentials = {
@@ -135,7 +137,7 @@ describe("brewfather-api-request Node", function () {
       },
     };
 
-    helper.load(bfApiReq, flow, credentials, function () {
+    helper.load([bfConfig, bfApiReq], flow, credentials, function () {
       var n2 = helper.getNode("n2");
       var n1 = helper.getNode("n1");
       n2.on("input", function (msg) {
@@ -158,10 +160,10 @@ describe("brewfather-api-request Node", function () {
         include: ["recipe.mash", "recipe.steps"],
         property: "payload",
         propertyType: "msg",
-        brewfatherCredentials: "n3",
+        brewfatherConfig: "n3",
       },
       { id: "n2", type: "helper" },
-      { id: "n3", type: "brewfather-credentials" },
+      { id: "n3", type: "brewfather-config" },
     ];
     var credentials = {
       n3: {
@@ -169,7 +171,7 @@ describe("brewfather-api-request Node", function () {
         apikey: "password",
       },
     };
-    helper.load(bfApiReq, flow, credentials, function () {
+    helper.load([bfConfig, bfApiReq], flow, credentials, function () {
       var n2 = helper.getNode("n2");
       var n1 = helper.getNode("n1");
       n2.on("input", function (msg) {
@@ -197,10 +199,10 @@ describe("brewfather-api-request Node", function () {
         status: "Brewing",
         offset: 1,
         limit: 20,
-        brewfatherCredentials: "n3",
+        brewfatherConfig: "n3",
       },
       { id: "n2", type: "helper" },
-      { id: "n3", type: "brewfather-credentials" },
+      { id: "n3", type: "brewfather-config" },
     ];
     var credentials = {
       n3: {
@@ -208,7 +210,7 @@ describe("brewfather-api-request Node", function () {
         apikey: "password",
       },
     };
-    helper.load(bfApiReq, flow, credentials, function () {
+    helper.load([bfConfig, bfApiReq], flow, credentials, function () {
       var n2 = helper.getNode("n2");
       var n1 = helper.getNode("n1");
       n2.on("input", function (msg) {
@@ -234,10 +236,10 @@ describe("brewfather-api-request Node", function () {
           status: "Brewing",
           offset: 1,
           limit: 20,
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -245,7 +247,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -274,10 +276,10 @@ describe("brewfather-api-request Node", function () {
           include: ["recipe.mash", "recipe.steps"],
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -285,7 +287,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -321,10 +323,10 @@ describe("brewfather-api-request Node", function () {
           endpoint: "getbatchlastreading",
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -332,7 +334,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -370,10 +372,10 @@ describe("brewfather-api-request Node", function () {
           endpoint: "getbatchbrewtracker",
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -381,7 +383,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -429,10 +431,10 @@ describe("brewfather-api-request Node", function () {
           endpoint: "getbatchreadings",
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -440,7 +442,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -469,10 +471,10 @@ describe("brewfather-api-request Node", function () {
           include: ["recipe.mash", "recipe.steps"],
           property: "abc1234",
           propertyType: "str",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -480,7 +482,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -509,10 +511,10 @@ describe("brewfather-api-request Node", function () {
           include: ["recipe.mash", "recipe.steps"],
           property: "#:(memory1)::foo",
           propertyType: "flow",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -520,7 +522,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         initContext(function () {
           var n2 = helper.getNode("n2");
           var n1 = helper.getNode("n1");
@@ -554,10 +556,10 @@ describe("brewfather-api-request Node", function () {
           include: ["recipe.mash", "recipe.steps"],
           property: "#:(memory1)::foo",
           propertyType: "global",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -565,7 +567,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         initContext(function () {
           var n2 = helper.getNode("n2");
           var n1 = helper.getNode("n1");
@@ -599,10 +601,10 @@ describe("brewfather-api-request Node", function () {
           status: "Brewing",
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -610,7 +612,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         initContext(function () {
           var n2 = helper.getNode("n2");
           var n1 = helper.getNode("n1");
@@ -642,10 +644,10 @@ describe("brewfather-api-request Node", function () {
           complete: true,
           offset: 1,
           limit: 20,
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -653,7 +655,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -682,10 +684,10 @@ describe("brewfather-api-request Node", function () {
           include: ["recipe.mash", "recipe.steps"],
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -693,7 +695,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -726,10 +728,10 @@ describe("brewfather-api-request Node", function () {
           complete: true,
           offset: 1,
           limit: 20,
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -737,7 +739,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -766,10 +768,10 @@ describe("brewfather-api-request Node", function () {
           include: ["recipe.mash", "recipe.steps"],
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -777,7 +779,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -806,10 +808,10 @@ describe("brewfather-api-request Node", function () {
           inventory: "",
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -817,7 +819,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -845,10 +847,10 @@ describe("brewfather-api-request Node", function () {
           inventory: "200",
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -856,7 +858,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -886,10 +888,10 @@ describe("brewfather-api-request Node", function () {
           complete: true,
           offset: 1,
           limit: 20,
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -897,7 +899,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -926,10 +928,10 @@ describe("brewfather-api-request Node", function () {
           include: ["recipe.mash", "recipe.steps"],
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -937,7 +939,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -966,10 +968,10 @@ describe("brewfather-api-request Node", function () {
           inventory: "200",
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -977,7 +979,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -1007,10 +1009,10 @@ describe("brewfather-api-request Node", function () {
           complete: true,
           offset: 1,
           limit: 20,
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -1018,7 +1020,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -1047,10 +1049,10 @@ describe("brewfather-api-request Node", function () {
           include: ["recipe.mash", "recipe.steps"],
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -1058,7 +1060,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -1087,10 +1089,10 @@ describe("brewfather-api-request Node", function () {
           inventory: "200",
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -1098,7 +1100,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -1128,10 +1130,10 @@ describe("brewfather-api-request Node", function () {
           complete: true,
           offset: 1,
           limit: 20,
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -1139,7 +1141,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -1168,10 +1170,10 @@ describe("brewfather-api-request Node", function () {
           include: ["recipe.mash", "recipe.steps"],
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -1179,7 +1181,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
@@ -1208,10 +1210,10 @@ describe("brewfather-api-request Node", function () {
           inventory: "200",
           property: "payload",
           propertyType: "msg",
-          brewfatherCredentials: "n3",
+          brewfatherConfig: "n3",
         },
         { id: "n2", type: "helper" },
-        { id: "n3", type: "brewfather-credentials" },
+        { id: "n3", type: "brewfather-config" },
       ];
       var credentials = {
         n3: {
@@ -1219,7 +1221,7 @@ describe("brewfather-api-request Node", function () {
           apikey: "password",
         },
       };
-      helper.load(bfApiReq, flow, credentials, function () {
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
         var n2 = helper.getNode("n2");
         var n1 = helper.getNode("n1");
         n2.on("input", function (msg) {
