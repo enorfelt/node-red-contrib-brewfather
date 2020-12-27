@@ -4,6 +4,7 @@
 name: node-red-contrib-brewfather Package
 
 on:
+  workflow_dispatch:
   release:
     types: [created]
 
