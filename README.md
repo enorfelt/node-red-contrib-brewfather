@@ -34,8 +34,7 @@ Double click the brewfahter node to open it's settings.
 | Setting           | Description                                                                  |
 | ----------------- | -----------------------------------------------------------------------------|
 | `Name`            | What ever you name the node                                                  |
-| `User ID`         | The user id obtained from the Brewfather app                                 |
-| `API-Key`         | The password for using the Brewfahter API obtained from Brewfahter app       |
+| `Credentials`     | The user id and api key obtained from the Brewfather app                     |
 | `Action`          | Select what data you would like to get or modify                             |
 | `Status`          | Related to get batches and update batch. Filter or update status             |
 | `Complete`        | Gets all the data associated with a resource in Brewfahter                   |
