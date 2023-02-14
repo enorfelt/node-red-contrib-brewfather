@@ -11,6 +11,10 @@ module.exports = function (RED) {
       try {
         msg.payloadIn = msg.payload;
         var id = await _getIdValue(node, msg, config);
+        config.startafter = msg.start_after ? msg.start_after : config.startafter;
+        if (msg.updateBatch) {
+          config.updateBatch = msg.updateBatch;
+        }
         msg.payload = await node.brewfatherConfig.sendRequest(id, config);
         send(msg);
         if (done) done();

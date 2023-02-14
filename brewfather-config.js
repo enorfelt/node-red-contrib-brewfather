@@ -22,7 +22,7 @@ module.exports = function (RED) {
             include: config.include,
             complete: config.complete,
             status: config.status,
-            offset: config.offset,
+            startafter: config.startafter,
             limit: config.limit,
           });
         case "getbatch":
@@ -34,12 +34,12 @@ module.exports = function (RED) {
         case "getbatchbrewtracker":
           return bfService.getBatchBrewtracker(id);
         case "updatebatch":
-          return bfService.updateBatch(id, config.status);
+          return bfService.updateBatch(id, config.updateBatch ? config.updateBatch : config.status);
         case "getrecipes":
           return bfService.getRecipes({
             include: config.include,
             complete: config.complete,
-            offset: config.offset,
+            startafter: config.startafter,
             limit: config.limit,
           });
         case "getrecipe":
@@ -51,7 +51,7 @@ module.exports = function (RED) {
             complete: config.complete,
             inventorynegative: config.inventorynegative,
             inventoryexist: config.inventoryexist,
-            offset: config.offset,
+            startafter: config.startafter,
             limit: config.limit,
           });
         case "getfermentable":
@@ -70,7 +70,7 @@ module.exports = function (RED) {
             complete: config.complete,
             inventorynegative: config.inventorynegative,
             inventoryexist: config.inventoryexist,
-            offset: config.offset,
+            startafter: config.startafter,
             limit: config.limit,
           });
         case "gethop":
@@ -89,7 +89,7 @@ module.exports = function (RED) {
             complete: config.complete,
             inventorynegative: config.inventorynegative,
             inventoryexist: config.inventoryexist,
-            offset: config.offset,
+            startafter: config.startafter,
             limit: config.limit,
           });
         case "getmisc":
@@ -108,7 +108,7 @@ module.exports = function (RED) {
             complete: config.complete,
             inventorynegative: config.inventorynegative,
             inventoryexist: config.inventoryexist,
-            offset: config.offset,
+            startafter: config.startafter,
             limit: config.limit,
           });
         case "getyeast":

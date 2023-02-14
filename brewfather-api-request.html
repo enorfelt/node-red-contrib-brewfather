@@ -15,7 +15,7 @@
       inventoryadjust: { value: "" },
       inventory: { value: "" },
       status: { value: "Planning" },
-      offset: { value: 0 },
+      startafter: { value: "" },
       limit: { value: 10 },
       brewfatherConfig: { value: "", type: "brewfather-config" },
     },
@@ -45,11 +45,6 @@
         default: "num",
         types: ["num"],
         typeField: "#node-input-inventory-typed",
-      });
-      $("#node-input-offset").typedInput({
-        default: "num",
-        types: ["num"],
-        typeField: "#node-input-offset-typed",
       });
       $("#node-input-limit").typedInput({
         default: "num",
@@ -230,9 +225,8 @@
     <input type="hidden" id="node-input-inventory-typed" />
   </div>
   <div class="form-row endpoint getbatches getrecipes getfermentables gethops getmiscs getyeasts">
-    <label>Offset</label>
-    <input type="text" id="node-input-offset" style="width:70%;" />
-    <input type="hidden" id="node-input-offset-typed" />
+    <label>Start after</label>
+    <input type="text" id="node-input-startafter" />
   </div>
   <div class="form-row endpoint getbatches getrecipes getfermentables gethops getmiscs getyeasts">
     <label>Limit</label>

@@ -22,9 +22,12 @@ class BrewfatherService {
       include: params.include ? params.include.join(",") : "",
       complete: params.complete || false,
       status: params.status || "Planning",
-      offset: params.offset || 0,
       limit: params.limit || 10,
     };
+
+    if (params.startafter) {
+      queryParams.start_after = params.startafter;
+    }
 
     var url = this.baseUrl + "/batches?" + querystring.stringify(queryParams);
 
@@ -60,18 +63,25 @@ class BrewfatherService {
     return await httpService.get(url);
   }
 
-  async updateBatch(id, status) {
-    if (!id || !status) return;
+  async updateBatch(id, config) {
+    if (!id || !config) return;
 
-    return await httpService.patch(this.baseUrl + "/batches/" + id + "?status=" + status);
+    if (typeof config === 'string') {
+      return await httpService.patch(this.baseUrl + "/batches/" + id + "?status=" + config);
+    }
+
+    return await httpService.patch(this.baseUrl + "/batches/" + id + "?" + querystring.stringify(config));
   }
 
   async getRecipes(params = {}) {
     var queryParams = {
       include: params.include ? params.include.join(",") : "",
       complete: params.complete || false,
-      offset: params.offset || 0,
       limit: params.limit || 10
+    }
+
+    if (params.startafter) {
+      queryParams.start_after = params.startafter;
     }
 
     var url = this.baseUrl + "/recipes?" + querystring.stringify(queryParams);
@@ -97,8 +107,11 @@ class BrewfatherService {
       include: params.include ? params.include.join(",") : "",
       complete: params.complete || false,
       inventory_exists: params.inventoryexist || false,
-      offset: params.offset || 0,
       limit: params.limit || 10
+    }
+
+    if (params.startafter) {
+      queryParams.start_after = params.startafter;
     }
 
     var inventoryType = params.inventoryType || "fermentables";
