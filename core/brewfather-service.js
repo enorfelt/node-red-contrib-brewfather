@@ -5,7 +5,7 @@ const querystring = require("querystring");
 
 class BrewfatherService {
   constructor() {
-    this.baseUrl = "https://api.brewfather.app/v1";
+    this.baseUrl = "https://api.brewfather.app/v2";
   }
 
   setCredentials(userName, apiKey) {

@@ -255,7 +255,7 @@ describe("brewfather-api-request Node", function () {
           msg.payload.should.have.size(3);
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/batches?include=recipe.mash%2Crecipe.steps&complete=true&status=Brewing&offset=1&limit=20"
+              "https://api.brewfather.app/v2/batches?include=recipe.mash%2Crecipe.steps&complete=true&status=Brewing&offset=1&limit=20"
             )
           );
           done();
@@ -294,7 +294,7 @@ describe("brewfather-api-request Node", function () {
           msg.should.have.property("payload", { id: "1234abc" });
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/batches/1234abc?include=recipe.mash%2Crecipe.steps"
+              "https://api.brewfather.app/v2/batches/1234abc?include=recipe.mash%2Crecipe.steps"
             )
           );
           done();
@@ -350,7 +350,7 @@ describe("brewfather-api-request Node", function () {
           });
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/batches/1234abc/readings/last"
+              "https://api.brewfather.app/v2/batches/1234abc/readings/last"
             )
           );
           done();
@@ -390,7 +390,7 @@ describe("brewfather-api-request Node", function () {
           msg.should.have.property("payload", { id: "brewtrackerid123" });
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/batches/1234abc/brewtracker"
+              "https://api.brewfather.app/v2/batches/1234abc/brewtracker"
             )
           );
           done();
@@ -450,7 +450,7 @@ describe("brewfather-api-request Node", function () {
           msg.payload.should.have.size(2);
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/batches/1234abc/readings"
+              "https://api.brewfather.app/v2/batches/1234abc/readings"
             )
           );
           done();
@@ -489,7 +489,7 @@ describe("brewfather-api-request Node", function () {
           msg.should.have.property("payload", { id: "abc1234" });
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/batches/abc1234?include=recipe.mash%2Crecipe.steps"
+              "https://api.brewfather.app/v2/batches/abc1234?include=recipe.mash%2Crecipe.steps"
             )
           );
           done();
@@ -530,7 +530,7 @@ describe("brewfather-api-request Node", function () {
             msg.should.have.property("payload", { id: "idfromfoo" });
             assert(
               getStub.calledWith(
-                "https://api.brewfather.app/v1/batches/idfromfoo?include=recipe.mash%2Crecipe.steps"
+                "https://api.brewfather.app/v2/batches/idfromfoo?include=recipe.mash%2Crecipe.steps"
               )
             );
             done();
@@ -575,7 +575,7 @@ describe("brewfather-api-request Node", function () {
             msg.should.have.property("payload", { id: "idfromfoo" });
             assert(
               getStub.calledWith(
-                "https://api.brewfather.app/v1/batches/idfromfoo?include=recipe.mash%2Crecipe.steps"
+                "https://api.brewfather.app/v2/batches/idfromfoo?include=recipe.mash%2Crecipe.steps"
               )
             );
             done();
@@ -619,7 +619,7 @@ describe("brewfather-api-request Node", function () {
           n2.on("input", function (msg) {
             assert(
               updateStub.calledWith(
-                "https://api.brewfather.app/v1/batches/idfromfoo?status=Brewing"
+                "https://api.brewfather.app/v2/batches/idfromfoo?status=Brewing"
               )
             );
             done();
@@ -663,7 +663,7 @@ describe("brewfather-api-request Node", function () {
           msg.payload.should.have.size(3);
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/recipes?include=recipe.mash%2Crecipe.steps&complete=true&offset=1&limit=20"
+              "https://api.brewfather.app/v2/recipes?include=recipe.mash%2Crecipe.steps&complete=true&offset=1&limit=20"
             )
           );
           done();
@@ -702,7 +702,7 @@ describe("brewfather-api-request Node", function () {
           msg.should.have.property("payload", { id: "recipeid" });
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/recipes/recipeid?include=recipe.mash%2Crecipe.steps"
+              "https://api.brewfather.app/v2/recipes/recipeid?include=recipe.mash%2Crecipe.steps"
             )
           );
           done();
@@ -747,7 +747,7 @@ describe("brewfather-api-request Node", function () {
           msg.payload.should.have.size(3);
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/inventory/fermentables?inventory_negative=true&include=recipe.mash%2Crecipe.steps&complete=true&inventory_exists=true&offset=1&limit=20"
+              "https://api.brewfather.app/v2/inventory/fermentables?inventory_negative=true&include=recipe.mash%2Crecipe.steps&complete=true&inventory_exists=true&offset=1&limit=20"
             )
           );
           done();
@@ -786,7 +786,7 @@ describe("brewfather-api-request Node", function () {
           msg.should.have.property("payload", { id: "fermentableid" });
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/inventory/fermentables/fermentableid?include=recipe.mash%2Crecipe.steps"
+              "https://api.brewfather.app/v2/inventory/fermentables/fermentableid?include=recipe.mash%2Crecipe.steps"
             )
           );
           done();
@@ -825,7 +825,7 @@ describe("brewfather-api-request Node", function () {
         n2.on("input", function (msg) {
           assert(
             updateStub.calledWith(
-              "https://api.brewfather.app/v1/inventory/fermentables/fermentableid?inventory_adjust=-10"
+              "https://api.brewfather.app/v2/inventory/fermentables/fermentableid?inventory_adjust=-10"
             )
           );
           done();
@@ -864,7 +864,7 @@ describe("brewfather-api-request Node", function () {
         n2.on("input", function (msg) {
           assert(
             updateStub.calledWith(
-              "https://api.brewfather.app/v1/inventory/fermentables/fermentableid?inventory=200"
+              "https://api.brewfather.app/v2/inventory/fermentables/fermentableid?inventory=200"
             )
           );
           done();
@@ -907,7 +907,7 @@ describe("brewfather-api-request Node", function () {
           msg.payload.should.have.size(3);
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/inventory/hops?inventory_negative=true&include=recipe.mash%2Crecipe.steps&complete=true&inventory_exists=true&offset=1&limit=20"
+              "https://api.brewfather.app/v2/inventory/hops?inventory_negative=true&include=recipe.mash%2Crecipe.steps&complete=true&inventory_exists=true&offset=1&limit=20"
             )
           );
           done();
@@ -946,7 +946,7 @@ describe("brewfather-api-request Node", function () {
           msg.should.have.property("payload", { id: "hopid" });
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/inventory/hops/hopid?include=recipe.mash%2Crecipe.steps"
+              "https://api.brewfather.app/v2/inventory/hops/hopid?include=recipe.mash%2Crecipe.steps"
             )
           );
           done();
@@ -985,7 +985,7 @@ describe("brewfather-api-request Node", function () {
         n2.on("input", function (msg) {
           assert(
             updateStub.calledWith(
-              "https://api.brewfather.app/v1/inventory/hops/hopid?inventory=200"
+              "https://api.brewfather.app/v2/inventory/hops/hopid?inventory=200"
             )
           );
           done();
@@ -1028,7 +1028,7 @@ describe("brewfather-api-request Node", function () {
           msg.payload.should.have.size(3);
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/inventory/miscs?inventory_negative=true&include=recipe.mash%2Crecipe.steps&complete=true&inventory_exists=true&offset=1&limit=20"
+              "https://api.brewfather.app/v2/inventory/miscs?inventory_negative=true&include=recipe.mash%2Crecipe.steps&complete=true&inventory_exists=true&offset=1&limit=20"
             )
           );
           done();
@@ -1067,7 +1067,7 @@ describe("brewfather-api-request Node", function () {
           msg.should.have.property("payload", { id: "miscid" });
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/inventory/miscs/miscid?include=recipe.mash%2Crecipe.steps"
+              "https://api.brewfather.app/v2/inventory/miscs/miscid?include=recipe.mash%2Crecipe.steps"
             )
           );
           done();
@@ -1106,7 +1106,7 @@ describe("brewfather-api-request Node", function () {
         n2.on("input", function (msg) {
           assert(
             updateStub.calledWith(
-              "https://api.brewfather.app/v1/inventory/miscs/miscid?inventory=200"
+              "https://api.brewfather.app/v2/inventory/miscs/miscid?inventory=200"
             )
           );
           done();
@@ -1149,7 +1149,7 @@ describe("brewfather-api-request Node", function () {
           msg.payload.should.have.size(3);
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/inventory/yeasts?inventory_negative=true&include=recipe.mash%2Crecipe.steps&complete=true&inventory_exists=true&offset=1&limit=20"
+              "https://api.brewfather.app/v2/inventory/yeasts?inventory_negative=true&include=recipe.mash%2Crecipe.steps&complete=true&inventory_exists=true&offset=1&limit=20"
             )
           );
           done();
@@ -1188,7 +1188,7 @@ describe("brewfather-api-request Node", function () {
           msg.should.have.property("payload", { id: "yeastid" });
           assert(
             getStub.calledWith(
-              "https://api.brewfather.app/v1/inventory/yeasts/yeastid?include=recipe.mash%2Crecipe.steps"
+              "https://api.brewfather.app/v2/inventory/yeasts/yeastid?include=recipe.mash%2Crecipe.steps"
             )
           );
           done();
@@ -1227,7 +1227,7 @@ describe("brewfather-api-request Node", function () {
         n2.on("input", function (msg) {
           assert(
             updateStub.calledWith(
-              "https://api.brewfather.app/v1/inventory/yeasts/yeastid?inventory=200"
+              "https://api.brewfather.app/v2/inventory/yeasts/yeastid?inventory=200"
             )
           );
           done();
