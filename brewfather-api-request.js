@@ -19,16 +19,28 @@ module.exports = function (RED) {
         send(msg);
         if (done) done();
       } catch (error) {
-        if (done) done(error.message || "Something went wrong!");
+        var message = "Something went wrong!";
+        if (typeof error === "string") {
+          message = error;
+        } else if(error) {
+          message = error.message;
+        }
+        if (done) done(message);
       }
     });
 
     function _getIdValue(node, msg, config) {
-      return new Promise(function (resolve) {
+      return new Promise(function (resolve, reject) {
         if (config.propertyType === "str") {
           resolve(config.property);
         } else if (config.propertyType === "msg") {
-          resolve(msg[config.property]);
+          const path = config.property.split('.');
+          const get = (p, o) => p.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, o);
+          const value = get(path, msg);
+          if (value === null) {
+            reject("Property not found or null on path: " + config.property);
+          }
+          resolve(value);
         } else {
           RED.util.evaluateNodeProperty(
             config.property,

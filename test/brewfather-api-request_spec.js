@@ -68,7 +68,7 @@ describe("brewfather-api-request Node", function () {
         apikey: "password",
       },
     };
-   
+
     helper.load([bfConfig, bfApiReq], flow, credentials, function () {
       var n1 = helper.getNode("n1");
       n1.should.have.property("name", "brewfather-api-request");
@@ -384,6 +384,82 @@ describe("brewfather-api-request Node", function () {
           done();
         });
         n1.receive({ payload: "1234abc" });
+      });
+    });
+
+    it("should get batch with id in payload from nested property", function (done) {
+      getStub.resolves({ id: "1234abc" });
+      var flow = [
+        {
+          id: "n1",
+          type: "brewfather-api-request",
+          name: "brewfather-api-request",
+          wires: [["n2"]],
+          endpoint: "getbatch",
+          include: ["recipe.mash", "recipe.steps"],
+          property: "payload.deep._id",
+          propertyType: "msg",
+          brewfatherConfig: "n3",
+        },
+        { id: "n2", type: "helper" },
+        { id: "n3", type: "brewfather-config" },
+      ];
+      var credentials = {
+        n3: {
+          userid: "username",
+          apikey: "password",
+        },
+      };
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
+        var n2 = helper.getNode("n2");
+        var n1 = helper.getNode("n1");
+        n2.on("input", function (msg) {
+          msg.should.have.property("payload", { id: "1234abc" });
+          assert(
+            getStub.calledWith(
+              "https://api.brewfather.app/v2/batches/1234abc?include=recipe.mash%2Crecipe.steps"
+            )
+          );
+          done();
+        });
+        n1.receive({ payload: { deep: { _id: "1234abc" } } });
+      });
+    });
+
+    it("should throw error if nested property not found", function (done) {
+      getStub.resolves({ id: "1234abc" });
+      var flow = [
+        {
+          id: "n1",
+          type: "brewfather-api-request",
+          name: "brewfather-api-request",
+          wires: [["n2"]],
+          endpoint: "getbatch",
+          include: ["recipe.mash", "recipe.steps"],
+          property: "payload.deep.notfound",
+          propertyType: "msg",
+          brewfatherConfig: "n3",
+        },
+        { id: "n2", type: "helper" },
+        { id: "n3", type: "brewfather-config" },
+      ];
+      var credentials = {
+        n3: {
+          userid: "username",
+          apikey: "password",
+        },
+      };
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
+        var n2 = helper.getNode("n2");
+        var n1 = helper.getNode("n1");
+        n2.on("input", function (msg) {
+          done(new Error("No message should have been sent"));
+        });
+        n1.error = function (message) {
+          message.should.equal("Property not found or null on path: payload.deep.notfound");
+          done();
+        };
+        n1.receive({ payload: { deep: { _id: "1234abc" } } });
       });
     });
 
@@ -748,7 +824,7 @@ describe("brewfather-api-request Node", function () {
             );
             done();
           });
-          n1.receive({ payload: "idfromfoo", updateBatch: { status: 'Fermenting'} });
+          n1.receive({ payload: "idfromfoo", updateBatch: { status: 'Fermenting' } });
         });
       });
     });
@@ -788,7 +864,7 @@ describe("brewfather-api-request Node", function () {
             );
             done();
           });
-          n1.receive({ payload: "idfromfoo", updateBatch: { status: 'Fermenting', measuredMashPh: 5.2, measuredOg: 1.055} });
+          n1.receive({ payload: "idfromfoo", updateBatch: { status: 'Fermenting', measuredMashPh: 5.2, measuredOg: 1.055 } });
         });
       });
     });
