@@ -31,20 +31,20 @@ Double click the brewfahter node to open it's settings.
 
 ### Configuration
 
-| Setting           | Description                                                                  |
-| ----------------- | -----------------------------------------------------------------------------|
-| `Name`            | What ever you name the node                                                  |
-| `Credentials`     | The user id and api key obtained from the Brewfather app                     |
-| `Action`          | Select what data you would like to get or modify                             |
-| `Status`          | Related to get batches and update batch. Filter or update status             |
-| `Complete`        | Gets all the data associated with a resource in Brewfahter                   |
-| `Included fields` | A list of json paths to include in the response e.g. recipe.notes            |
-| `Offset`          | Amount of documents to skip                                                  |
-| `Limit`           | Amount of documents to fetch. Defaults to 10. Max 50                         |
-| `Id`              | Related to get single resouce. Select from where to get the Id               |
-| `Existing`        | Related to inventory operations. Only return inventory that have amount > 0  |
-| `Adjust`          | Related to inventory update operations. Adjust the inventory by +/- amount   |
-| `Amount`          | Related to inventory update operations. Sets the inventory to entered amount |
+| Setting           | Description                                                                                      |
+| ----------------- | -------------------------------------------------------------------------------------------------|
+| `Name`            | What ever you name the node                                                                      |
+| `Credentials`     | The user id and api key obtained from the Brewfather app                                         |
+| `Action`          | Select what data you would like to get or modify                                                 |
+| `Status`          | Related to get batches and update batch. Filter or update status                                 |
+| `Complete`        | Gets all the data associated with a resource in Brewfahter                                       |
+| `Included fields` | A list of json paths to include in the response e.g. recipe.notes                                |
+| `Start after`     | The _id of the last item in prev request. Handy for paging. Can be specified in msg.start_after  |
+| `Limit`           | Amount of documents to fetch. Defaults to 10. Max 50                                             |
+| `Id`              | Related to get single resouce. Select from where to get the Id                                   |
+| `Existing`        | Related to inventory operations. Only return inventory that have amount > 0                      |
+| `Adjust`          | Related to inventory update operations. Adjust the inventory by +/- amount                       |
+| `Amount`          | Related to inventory update operations. Sets the inventory to entered amount                     |
 
 # Contributing
 
