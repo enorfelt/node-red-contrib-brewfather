@@ -1,0 +1,109 @@
+[
+  {
+      "id": "fd7d0cd1da73f246",
+      "type": "brewfather-api-request",
+      "z": "f6f2187d.f17ca8",
+      "name": "Get First Batch",
+      "property": "payload.0._id",
+      "propertyType": "msg",
+      "endpoint": "getbatch",
+      "include": [
+          "estimatedTotalGravity",
+          "recipe.fermentation.steps"
+      ],
+      "complete": false,
+      "inventorynegative": false,
+      "inventoryexist": false,
+      "inventoryadjust": "",
+      "inventory": "",
+      "status": "Completed",
+      "startafter": "",
+      "limit": 10,
+      "brewfatherConfig": "fa09b79043c4c3de",
+      "x": 400,
+      "y": 180,
+      "wires": [
+          [
+              "2258160143ab626e"
+          ]
+      ]
+  },
+  {
+      "id": "2258160143ab626e",
+      "type": "debug",
+      "z": "f6f2187d.f17ca8",
+      "name": "debug 1",
+      "active": true,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "payload",
+      "targetType": "msg",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 480,
+      "y": 220,
+      "wires": []
+  },
+  {
+      "id": "f91f702eb3cbc7d4",
+      "type": "brewfather-api-request",
+      "z": "f6f2187d.f17ca8",
+      "name": "Completed batches",
+      "property": "payload",
+      "propertyType": "msg",
+      "endpoint": "getbatches",
+      "include": [],
+      "complete": false,
+      "inventorynegative": false,
+      "inventoryexist": false,
+      "inventoryadjust": "",
+      "inventory": "",
+      "status": "Completed",
+      "startafter": "",
+      "limit": 10,
+      "brewfatherConfig": "fa09b79043c4c3de",
+      "x": 330,
+      "y": 140,
+      "wires": [
+          [
+              "fd7d0cd1da73f246"
+          ]
+      ]
+  },
+  {
+      "id": "8b62472387dbaa13",
+      "type": "inject",
+      "z": "f6f2187d.f17ca8",
+      "name": "Trigger",
+      "props": [
+          {
+              "p": "payload"
+          }
+      ],
+      "repeat": "",
+      "crontab": "",
+      "once": true,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "{}",
+      "payloadType": "json",
+      "x": 120,
+      "y": 140,
+      "wires": [
+          [
+              "f91f702eb3cbc7d4"
+          ]
+      ]
+  },
+  {
+      "id": "70ac8ea4dc8fe137",
+      "type": "comment",
+      "z": "f6f2187d.f17ca8",
+      "name": "README",
+      "info": " 1. Gets the first 10 completed batches\n 2. Then takes the first to get more batch info\n 3. Displays the result in debug window",
+      "x": 120,
+      "y": 80,
+      "wires": []
+  }
+]

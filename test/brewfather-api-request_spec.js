@@ -426,6 +426,45 @@ describe("brewfather-api-request Node", function () {
       });
     });
 
+    it("should get batch with id in payload from nested property in array", function (done) {
+      getStub.resolves({ id: "1234abc" });
+      var flow = [
+        {
+          id: "n1",
+          type: "brewfather-api-request",
+          name: "brewfather-api-request",
+          wires: [["n2"]],
+          endpoint: "getbatch",
+          include: ["recipe.mash", "recipe.steps"],
+          property: "payload.0.deep.1._id",
+          propertyType: "msg",
+          brewfatherConfig: "n3",
+        },
+        { id: "n2", type: "helper" },
+        { id: "n3", type: "brewfather-config" },
+      ];
+      var credentials = {
+        n3: {
+          userid: "username",
+          apikey: "password",
+        },
+      };
+      helper.load([bfConfig, bfApiReq], flow, credentials, function () {
+        var n2 = helper.getNode("n2");
+        var n1 = helper.getNode("n1");
+        n2.on("input", function (msg) {
+          msg.should.have.property("payload", { id: "1234abc" });
+          assert(
+            getStub.calledWith(
+              "https://api.brewfather.app/v2/batches/1234abc?include=recipe.mash%2Crecipe.steps"
+            )
+          );
+          done();
+        });
+        n1.receive({ payload: [{ deep: [{ _id: "shouldnotbepicked" }, { _id: "1234abc" }] }] });
+      });
+    });
+
     it("should throw error if nested property not found", function (done) {
       getStub.resolves({ id: "1234abc" });
       var flow = [

@@ -17,7 +17,9 @@ $ npm install node-red-contrib-brewfather
 
 ### Simple flow
 
-Once installed, add a simple flow consisting of a trigger, a brewfather and a debug node all connected in order.  
+Once installed, import included example or follow below steps.
+
+Add a simple flow consisting of a trigger, a brewfather and a debug node all connected in order.  
 Make sure that the trigger node injects on startup to trigger the Brewfahter node.  
 Double click the brewfahter node to open it's settings.
 1. Give the node a meaningful name like Get Batches
